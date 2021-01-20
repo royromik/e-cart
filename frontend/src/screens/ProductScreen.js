@@ -98,8 +98,9 @@ const ProductScreen = ({ history, match }) => {
                   onClick={addToCartHandler}
                   className="btn btn-block"
                   type="button"
-                  disabled={product.countInStock == 0}
+                  disabled={Number(product.countInStock) === 0}
                 >
+                  
                   Add to Cart
                 </Button>
               </ListGroup.Item>
