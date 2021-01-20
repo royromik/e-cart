@@ -117,3 +117,43 @@ export const payOrder = (orderId, paymentResult) => async (
   })
   }
 };
+
+export const getMyOrders = () => async (
+  dispatch,
+  getstate
+) => {
+  try {
+    dispatch({
+      type: orderConstants.ORDER_LIST_MYORDERS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getstate();
+
+    let config = {
+      headers: {
+        authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/orders/myorders`, config);
+
+    dispatch({
+      type: orderConstants.ORDER_LIST_MYORDERS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    const message =
+    error.response && error.response.data.message
+      ? error.response.data.message
+      : error.message
+  if (message === 'Not authorized, token failed') {
+    dispatch(logout())
+  }
+  dispatch({
+    type: orderConstants.ORDER_LIST_MYORDERS_FAIL,
+    payload: message,
+  })
+  }
+};

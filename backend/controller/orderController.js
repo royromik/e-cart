@@ -74,7 +74,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 
 });
 
-// @desc - fetch user order
+// @desc - Get logged in user order
 // @route - GET /api/orders/myorders
 // @access - private
 const getMyOrders = asyncHandler(async (req, res) => {
