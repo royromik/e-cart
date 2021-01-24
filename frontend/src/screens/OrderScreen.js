@@ -3,13 +3,13 @@ import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderDetails, payOrder } from "../actions/orderActions.js";
-import { Image, Row, Col, Card, ListGroup } from "react-bootstrap";
+import { getOrderDetails, payOrder, deliverOrder } from "../actions/orderActions.js";
+import { Image, Row, Col, Card, ListGroup, Button } from "react-bootstrap";
 import Message from "../components/Message.js";
 import Loader from "../components/Loader.js";
 import { orderConstants } from "../constants/orderConstants.js";
 
-const PlaceOrderScreen = ({ match, history }) => {
+const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id;
   const [sdkReady, setSdkReady] = useState(false);
   const dispatch = useDispatch();
@@ -18,12 +18,15 @@ const PlaceOrderScreen = ({ match, history }) => {
 
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
+  
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   if (!loading) {
-    //Calculating Order
+    //Calculate prices
     const addDecimal = (num) => {
       return (Math.round(num * 100) / 100).toFixed(2);
     };
@@ -40,16 +43,17 @@ const PlaceOrderScreen = ({ match, history }) => {
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal");
       const script = document.createElement("script");
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
       script.type = "text/javascript";
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
       script.async = true;
       script.onload = () => {
         setSdkReady(true);
       };
       document.body.appendChild(script);
     };
-    if (order._id !== orderId || order.orderItems.length === 0 || successPay) {
+    if (!order || order._id !== orderId || order.orderItems.length ===0 || successPay|| successDeliver ) {
       dispatch({ type: orderConstants.ORDER_PAY_RESET });
+      dispatch({ type: orderConstants.ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -58,11 +62,15 @@ const PlaceOrderScreen = ({ match, history }) => {
         setSdkReady(true);
       }
     }
-  }, [orderId, dispatch, order, successPay, userInfo, history]);
+  }, [orderId, dispatch, order, successPay, successDeliver, userInfo, history]);
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(orderId, paymentResult));
   };
+
+  const deliverHandler = () =>{
+    dispatch(deliverOrder(order))
+  }
 
   return loading ? (
     <Loader />
@@ -94,7 +102,7 @@ const PlaceOrderScreen = ({ match, history }) => {
                 {order.shippingAddress.country}
               </p>
               {order.isDelivered ? (
-                <Message>delivered on: {order.deliveredAt}</Message>
+                <Message variant="success">delivered on: {order.deliveredAt.substring(0,10)}</Message>
               ) : (
                 <Message variant="danger">Not deliverd</Message>
               )}
@@ -106,7 +114,7 @@ const PlaceOrderScreen = ({ match, history }) => {
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant="success">Paid on: {order.paidAt}</Message>
+                <Message variant="success">Paid on: {order.paidAt.substring(0,10)}</Message>
               ) : (
                 <Message variant="danger">Not paid</Message>
               )}
@@ -115,7 +123,7 @@ const PlaceOrderScreen = ({ match, history }) => {
             <ListGroup.Item>
               <h2>Order Items</h2>
               {order.orderItems.length === 0 ? (
-                <Message>Your order is empty</Message>
+                <Message>Order is empty</Message>
               ) : (
                 <ListGroup variant="flush">
                   {order.orderItems.map((item, index) => (
@@ -173,7 +181,7 @@ const PlaceOrderScreen = ({ match, history }) => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              {!order.ispaid && (
+              {order && !order.isPaid  && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
                   {!sdkReady ? (
@@ -186,6 +194,14 @@ const PlaceOrderScreen = ({ match, history }) => {
                   )}
                 </ListGroup.Item>
               )}
+              {loadingDeliver && <Loader/>}
+              {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <ListGroup.Item>
+                  <Button variant="dark" className="btn-block" onClick={deliverHandler}>
+                    Mark as Delivered
+                  </Button>
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Card>
         </Col>
@@ -194,4 +210,4 @@ const PlaceOrderScreen = ({ match, history }) => {
   );
 };
 
-export default PlaceOrderScreen;
+export default OrderScreen;

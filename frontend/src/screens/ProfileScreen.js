@@ -34,14 +34,14 @@ const LoginScreen = ({ location, history }) => {
     }else{
         if(!user.name){
           dispatch(getMyOrders());
-            dispatch(getUserProfile('profile'))
+          dispatch(getUserProfile('profile'))
         }else{
             setName(user.name);
             setEmail(user.email);
         }
     }
 
-  }, [dispatch, history, userInfo, user]);
+  }, [dispatch, history, userInfo, user ]);
 
   const submitHandler = (e) => {
     e.preventDefault();

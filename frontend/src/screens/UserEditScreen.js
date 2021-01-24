@@ -47,12 +47,12 @@ const UserEditScreen = ({ location, history, match }) => {
 
   return (
     <>
-      <Link to="admin/userlist" className="btn btn-light my-3">
+      <Link to="/admin/userlist" className="btn btn-light my-3">
         Go Back
       </Link>
 
       <FormContainer>
-        <h1>Edit User</h1>
+        <h1>Edit Product</h1>
         {loadingUpdate &&<Loader/>}
         {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
         {loading ? <Loader />: error?error && <Message variant="danger">{error}</Message>:(
