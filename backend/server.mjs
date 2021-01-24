@@ -1,5 +1,5 @@
 import path from "path";
-import express from "express";
+import express from "express/index.js";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import dotenv from 'dotenv';
