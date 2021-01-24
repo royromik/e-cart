@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listProductDetails, createProductReview } from "../actions/productActions";
 import {constants} from "../constants/productConstants";
-import { Row, Col, Image, ListGroup, Button, Form } from "react-bootstrap";
+import { Row, Col, Image, ListGroup, Button, Form, Container } from "react-bootstrap";
 import Meta from "../components/Meta";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
@@ -68,6 +68,7 @@ const ProductScreen = ({ history, match }) => {
       ) : (
         <>
         <Meta title={product.name}/>
+        <Container>
         <Row>
           <Col md={6}>
             <Image src={product.image} fluid></Image>
@@ -141,9 +142,9 @@ const ProductScreen = ({ history, match }) => {
             </ListGroup>
           </Col>
         </Row>
-        <Row>
+        <Row className="mt-3">
         <Col md={6}>
-          <h2>Reviews</h2>
+          <h2 className="mb-3">Reviews</h2>
           {product.reviews.length === 0 && <Message>No Reviews</Message>}
           <ListGroup variant='flush'>
             {product.reviews.map((review) => (
@@ -155,7 +156,7 @@ const ProductScreen = ({ history, match }) => {
               </ListGroup.Item>
             ))}
             <ListGroup.Item>
-              <h2>Write a Customer Review</h2>
+              <h3>Write a Customer Review</h3>
               {successProductReview && (
                 <Message variant='success'>
                   Review submitted successfully
@@ -208,6 +209,7 @@ const ProductScreen = ({ history, match }) => {
           </ListGroup>
         </Col>
       </Row>
+      </Container>
     </>
       )}
     </>

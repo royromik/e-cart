@@ -78,8 +78,9 @@ const OrderScreen = ({ match, history }) => {
     <Message variant="danger">{error}</Message>
   ) : (
     <>
-      <h5>
-        <strong>order {order._id}</strong>
+      <h5 className="pl-4 text-wrap">
+        <strong>order </strong>
+        <span>{order._id}</span>
       </h5>
       <Row>
         <Col md={8}>
@@ -128,8 +129,8 @@ const OrderScreen = ({ match, history }) => {
                 <ListGroup variant="flush">
                   {order.orderItems.map((item, index) => (
                     <ListGroup.Item key={index}>
-                      <Row>
-                        <Col md={2}>
+                      <Row className="align-items-center">
+                        <Col md={2} className="px-0 px-md-auto">
                           <Image
                             src={item.image}
                             alt={item.name}
@@ -138,7 +139,7 @@ const OrderScreen = ({ match, history }) => {
                           />
                         </Col>
                         <Link to={`/product/${item.product}`}>
-                          <Col>{item.name}</Col>
+                          <Col className="mt-3 my-md-auto">{item.name}</Col>
                         </Link>
                         <Col md={4}>
                           {item.qty} x ${item.price} = ${item.qty * item.price}

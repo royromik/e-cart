@@ -76,6 +76,7 @@ const CartScreen = ({ match, location, history }) => {
                       type="button"
                       variant="light"
                       onClick={()=>removeFromCartHandler(item.product)}
+                      className="mt-3 my-md-auto border"
                     >
                       <i className="fas fa-trash"></i>
                     </Button>
