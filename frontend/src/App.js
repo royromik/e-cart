@@ -22,8 +22,10 @@ function App() {
   return (
     <Router>
       <Header />
-      <main className="py-3">
-        <Container>
+      <main className="pb-3">
+        <>
+        <Route path="/" component={HomeScreen} exact/>
+        <Container className="pt-3">
          <Route path="/product/:id" component={ProductScreen}/>
          <Route path="/cart/:id?" component={CartScreen}/>
          <Route path="/login" component={LoginScreen}/>
@@ -42,8 +44,9 @@ function App() {
          <Route path='/search/:keyword' component={HomeScreen} exact />
          <Route path="/page/:pageNumber" component={HomeScreen} exact/>
          <Route path="/search/:keyword/page/:pageNumber" component={HomeScreen} exact/>
-         <Route path="/" component={HomeScreen} exact/>
         </Container>
+
+         </>
       </main>
       <Footer />
     </Router>

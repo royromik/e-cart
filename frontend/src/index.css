@@ -34,7 +34,14 @@ strong {
   font-weight: bold !important;
 }
 
+.navbar{
+  padding:1.2rem 1rem !important;
+}
+
 /* carousel */
+.carousel-item {
+  transition: opacity 0.5s ease-in-out;
+}
 .carousel-item-next,
 .carousel-item-prev,
 .carousel-item.active {
@@ -59,8 +66,6 @@ strong {
 
 @media (min-width: 769px) {
   .carousel img {
-    border-radius: 50%;
-    width:310px;
     margin-top:4rem!important;
   }
 }
@@ -71,4 +76,16 @@ strong {
   .carousel-caption h2 {
     font-size: 2.5vw;
   }
+}
+
+header{
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgb(12 12 12 / 50%)); /* Black to grey gradient */
+  backdrop-filter: blur(8px); /* Apply blur effect */
+  -webkit-backdrop-filter: blur(8px); /* Safari support */
+  z-index: 1000; /* Ensure it's above other content */
+  transition: background 0.3s ease;
 }
